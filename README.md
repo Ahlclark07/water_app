@@ -9,7 +9,7 @@
 
 ### Mise en place :
 
-Dans le fichier lib/utils/mqtt_helper.dart, mettre à la ligne 15 à la place de 10.0.2.2 le serveur broker.emqx.io si vous souhaitez utiliser un brocker en ligne ou conservez 10.0.2.2 si vous êtes en local pendant les tests sur emulateur.
+Dans le fichier **lib/utils/mqtt_helper.dart**, mettre à la ligne 15 à la place de 10.0.2.2 le serveur broker.emqx.io si vous souhaitez utiliser un brocker en ligne ou conservez 10.0.2.2 si vous êtes en local pendant les tests sur emulateur.
 Si vous souhaitez avoir votre brocker en local, vous devez installer mosquitto ou tout autre outil sur votre ordinateur capable de créer un serveur mqtt en local :
 
 1. Installer mosquitto
@@ -37,7 +37,7 @@ Si vous souhaitez avoir votre brocker en local, vous devez installer mosquitto o
 6. Faites : **php artisan generate:key**
 7. Le serveur se sert de sqlite donc pas de config necéssaire, faites : **php artisan migrate**
 8. Pour démarrer le serveur à partir de votre ip local (192.168.1.101 par exemple et 7777 comme port ouvert) faites : **php artisan serve --host=192.168.1.101 --port=7777**
-9. Enfin mettez cette ip dans lib/utils/laravel_backend.dart à la ligne 8 à l'intérieur de la variable base url
+9. Enfin mettez cette ip dans **lib/utils/laravel_backend.dart** à la ligne 8 à l'intérieur de la variable base url
 
 - Faites run votre application flutter ou faites le build de l'apk pour la mettre sur votre téléphone. Ce dernier doit être connecté au même réseau local
   C'est bon ! You are all set !
