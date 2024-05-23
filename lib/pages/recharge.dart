@@ -1,9 +1,27 @@
 import 'package:eau/design.dart';
+import 'package:eau/utils/mqtt_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 
-class RechargePage extends StatelessWidget {
+class RechargePage extends StatefulWidget {
   const RechargePage({super.key});
+
+  @override
+  State<RechargePage> createState() => _RechargePageState();
+}
+
+class _RechargePageState extends State<RechargePage> {
+  final _formKey = GlobalKey<FormBuilderState>();
+
+  final controller = TextEditingController();
+  MqttHandler mqttHandler = MqttHandler();
+
+  @override
+  void initState() {
+    super.initState();
+    mqttHandler.connect();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +43,7 @@ class RechargePage extends StatelessWidget {
         width: width,
         padding: Marge.margeMiniPage,
         child: FormBuilder(
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -41,6 +60,9 @@ class RechargePage extends StatelessWidget {
                         .copyWith(color: Palette.couleur_bleu.withAlpha(100)),
                     child: FormBuilderTextField(
                       name: "montant",
+                      keyboardType: TextInputType.number,
+                      validator: FormBuilderValidators.integer(
+                          errorText: "Entrez un nombre"),
                       decoration: TextFieldDecoration.champ,
                       cursorColor: Palette.couleur_blanche,
                       style: TextDesign.text_blanc,
@@ -51,7 +73,10 @@ class RechargePage extends StatelessWidget {
               ),
               TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    if (_formKey.currentState!.isValid) {
+                      mqttHandler.publishRecharge(controller.text);
+                      Navigator.of(context).pop();
+                    }
                   },
                   child: Container(
                       width: width - 60,

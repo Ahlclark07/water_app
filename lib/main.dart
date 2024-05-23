@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
               indexPageActuel: 0,
             ),
         "/main": (context) => const MainPage(),
-        "/recharge": (context) => const RechargePage(),
+        "/recharge": (context) => RechargePage(),
       },
     );
   }

@@ -112,4 +112,14 @@ class MqttHandler with ChangeNotifier {
       client.publishMessage(pubTopic, MqttQos.atMostOnce, builder.payload!);
     }
   }
+
+  void publishRecharge(String valeur) {
+    final pubTopic = 'client_${LaravelBackend().user["id"]}/compteur';
+    final builder = MqttClientPayloadBuilder();
+    builder.addString(valeur);
+
+    if (client.connectionStatus?.state == MqttConnectionState.connected) {
+      client.publishMessage(pubTopic, MqttQos.atMostOnce, builder.payload!);
+    }
+  }
 }
