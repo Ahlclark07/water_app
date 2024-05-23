@@ -26,7 +26,7 @@ Si vous souhaitez avoir votre brocker en local, vous devez installer mosquitto o
   En envoyant une requête post à l'url dédiée avec les paramètres id_compteur et password dans le corps de la requête. 
   Cette requête retourne un objet JSON contenant une clé user et une clé token. Ce token de type Bearer devra être ajouter au header des requêtes protégées comme suit : "Authorization" : "Bearer {token}".
   Pour voir les url des requêtes veuillez consulter le projet Laravel.
-  ### Mise en place
+  ### Mise en place :
   Lancez le en suivant ces étapes :
 
 1. Ouvrez le port 8000 ou autre port disponible souhaité sur votre machine (voir des tutos sur google).
