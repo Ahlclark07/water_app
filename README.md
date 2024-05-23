@@ -3,9 +3,9 @@
 ## - Démarrer le serveur mqtt.
   Ce serveur permettra de faire la communication entre le système sous arduino + esp et l'application mobile. Entre autre je cite :
 
-  - Envoyer une demande de mise à jour des données de l'abonnement actuel au système electronique sur le topic "client\_{idDuCient}/demandeUpdate" que ce dernier écoute. Ainsi dès que l'utilisateur se connecte avec l'application, un message est envoyé à l'arduino pour qu'il transmette les données à jour au serveur sur la conso actuelle.
-  - Une fois que l'arduino fini de transmettre les données par requêtes post, il envoie un message sur le topic "client\_{idDuClient}/update", pour envoyer un ok à l'appli, ce dernier peut maintenant fetch les données du compte par requête GET
-  - Envoyer un changement d'état pour le compteur au système arduino + esp pour l'activer ou le désactiver par le topic "client\_{idDuClient}/compteur".
+  - Envoyer une demande de mise à jour des données de l'abonnement actuel au système electronique sur **le topic "client\_{idDuCient}/demandeUpdate"** que ce dernier écoute. Ainsi dès que l'utilisateur se connecte avec l'application, un message est envoyé à l'arduino pour qu'il transmette les données à jour au serveur sur la conso actuelle.
+  - Une fois que l'arduino fini de transmettre les données par requêtes post, il **envoie un message sur le topic "client\_{idDuClient}/update"**, pour envoyer un ok à l'appli, ce dernier peut maintenant fetch les données du compte par requête GET
+  - Envoyer un changement d'état pour le compteur au système arduino + esp pour l'activer ou le désactiver par **le topic "client\_{idDuClient}/compteur"**.
 
 ### Mise en place :
 
@@ -21,7 +21,10 @@ Si vous souhaitez avoir votre brocker en local, vous devez installer mosquitto o
 
 ## - Démarrez le serveur laravel
 
-  Faites un git clone du projet laravel lié à celui ci, c'est lui qui gère toute la logique d'authentification et la gestion des données. Le système esp + arduino comme l'application mobile devront à un compte utilisateur par ce dernier pour initier leurs fonctionnement. En envoyant une requête post à l'url dédiée avec les paramètres id_compteur et password dans le corps de la requête. Cette requête retourne un objet JSON contenant une clé user et une clé token. Ce token de type Bearer devra être ajouter au header des requêtes protégées comme suit : "Authorization" : "Bearer {token}".
+  Faites un git clone du projet laravel lié à celui ci, c'est lui qui gère toute la logique d'authentification et la gestion des données. 
+  Le système esp + arduino comme l'application mobile devront à un compte utilisateur par ce dernier pour initier leurs fonctionnement. 
+  En envoyant une requête post à l'url dédiée avec les paramètres id_compteur et password dans le corps de la requête. 
+  Cette requête retourne un objet JSON contenant une clé user et une clé token. Ce token de type Bearer devra être ajouter au header des requêtes protégées comme suit : "Authorization" : "Bearer {token}".
   Pour voir les url des requêtes veuillez consulter le projet Laravel.
   ### Mise en place
   Lancez le en suivant ces étapes :
@@ -30,10 +33,10 @@ Si vous souhaitez avoir votre brocker en local, vous devez installer mosquitto o
 2. Allez à la racine du projet laravel
 3. Faites : composer install
 4. Faites : npm install
-5. Pour générer le fichier .env à partir de l'exemple : cp .env.example .env
-6. Faites : php artisan generate:key
-7. Le serveur se sert de sqlite donc pas de config necéssaire, faites : php artisan migrate
-8. Pour démarrer le serveur à partir de votre ip local (192.168.1.101 par exemple et 7777 comme port ouvert) faites : php artisan serve --host=192.168.1.101 --port=7777
+5. Pour générer le fichier .env à partir de l'exemple : **cp .env.example .env**
+6. Faites : **php artisan generate:key**
+7. Le serveur se sert de sqlite donc pas de config necéssaire, faites : **php artisan migrate**
+8. Pour démarrer le serveur à partir de votre ip local (192.168.1.101 par exemple et 7777 comme port ouvert) faites : **php artisan serve --host=192.168.1.101 --port=7777**
 9. Enfin mettez cette ip dans lib/utils/laravel_backend.dart à la ligne 8 à l'intérieur de la variable base url
 
 - Faites run votre application flutter ou faites le build de l'apk pour la mettre sur votre téléphone. Ce dernier doit être connecté au même réseau local
