@@ -35,7 +35,7 @@ class _AccueilMainState extends State<AccueilMain> {
       child: ValueListenableBuilder(
           valueListenable: mqttHandler.data,
           builder: (context, value, child) {
-            final objetRecu = jsonDecode(value);
+            final objetRecu = jsonDecode(value == "" ? "{}" : value);
             inspect(objetRecu);
             return AsyncBuilder(
                 future: LaravelBackend().recupererAbonnement(),

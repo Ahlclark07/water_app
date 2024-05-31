@@ -20,7 +20,7 @@ class NotificationPage extends StatelessWidget {
               return const Text("Une erreur s'est produite");
             }
             if (notifications[1]!.isEmpty) {
-              return const Text("Pas de notificationspour le moment");
+              return const Text("Pas de notifications pour le moment");
             }
             return Column(
               mainAxisSize: MainAxisSize.min,
