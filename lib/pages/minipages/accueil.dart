@@ -30,82 +30,49 @@ class _AccueilMainState extends State<AccueilMain> {
   Widget build(BuildContext context) {
     final tailleEcran = MediaQuery.of(context).size;
     return Container(
-      width: tailleEcran.width,
-      padding: Marge.margePage,
-      child: ValueListenableBuilder(
-          valueListenable: mqttHandler.data,
-          builder: (context, value, child) {
-            final objetRecu = jsonDecode(value == "" ? "{}" : value);
-            inspect(objetRecu);
-            return AsyncBuilder(
-                future: LaravelBackend().recupererAbonnement(),
-                waiting: (context) => const CircularProgressIndicator(),
-                builder: (context, response) {
-                  final abonnement = response![1];
-                  return Column(
-                    children: [
-                      DisplayOnTab(
-                          titre: "MON ABONNEMENT",
-                          value: (abonnement!["titre"] ?? "")),
-                      DisplayOnTab(
-                          titre: "VOLUME TOTAL",
-                          value: "${abonnement["total"]}"),
-                      DisplayOnTab(
-                          titre: "VOLUME RESTANT",
-                          value:
-                              "${abonnement["total"] - abonnement["consommation"]}"),
-                      DisplayOnTab(
-                          titre: "VOLUME UTILISE",
-                          value: "${abonnement["consommation"]}"),
-                      Container(
-                        color: Palette.couleur_bleu.withAlpha(70),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text("Etat du compteur"),
-                            ToggleSwitch(mqttHandler)
-                          ],
-                        ),
-                      )
-                    ],
-                  );
-                });
-          }),
-    );
+        width: tailleEcran.width,
+        padding: Marge.margePage,
+        child: ValueListenableBuilder(
+            valueListenable: mqttHandler.data,
+            builder: (context, value, child) {
+              if (value.contains("'")) value = value.replaceAll("'", "\"");
+              final objet = value != "" ? jsonDecode(value) : {};
+              final abonnement = objet["titre"] ?? "____";
+              final total = objet["total"] ?? "____";
+              final restant =
+                  objet["total"] != null && objet["consommation"] != null
+                      ? objet["total"] - objet["consommation"]
+                      : "____";
+              final utilise = objet['consommation'] ?? "____";
+              final isSwitched = objet['actif'] == "true" ? true : false;
+              return Column(
+                children: [
+                  DisplayOnTab(titre: "MON ABONNEMENT", value: abonnement),
+                  DisplayOnTab(titre: "VOLUME TOTAL", value: total.toString()),
+                  DisplayOnTab(
+                      titre: "VOLUME RESTANT", value: restant.toString()),
+                  DisplayOnTab(
+                      titre: "VOLUME UTILISE", value: utilise.toString()),
+                  Container(
+                    color: Palette.couleur_bleu.withAlpha(70),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Etat du compteur"),
+                        ToggleSwitch(
+                          mqttHandler,
+                          isSwitched: isSwitched,
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              );
+            }));
   }
 }
 
 
 // Affiche la page d'accueil avec mqtt, bof obselète
-// ValueListenableBuilder(
-//           valueListenable: mqttHandler.data,
-//           builder: (context, value, child) {
-//             if (value.contains("'")) value = value.replaceAll("'", "\"");
-//             final objet = value != "" ? jsonDecode(value) : {};
-//             final abonnement = objet["abonnement"] ?? "____";
-//             final total = objet["total"] ?? "____";
-//             final restant = objet["restant"] ?? "____";
-//             final utilise = objet['utilise'] ?? "____";
-//             return Column(
-//               children: [
-//                 DisplayOnTab(titre: "MON ABONNEMENT", value: abonnement),
-//                 DisplayOnTab(titre: "VOLUME TOTAL", value: total),
-//                 DisplayOnTab(titre: "VOLUME RESTANT", value: restant),
-//                 DisplayOnTab(titre: "VOLUME UTILISE", value: utilise),
-//                 Container(
-//                   color: Palette.couleur_bleu.withAlpha(70),
-//                   padding:
-//                       const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-//                   child: Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       const Text("Etat du compteur"),
-//                       ToggleSwitch(mqttHandler)
-//                     ],
-//                   ),
-//                 )
-//               ],
-//             );
-//           }),

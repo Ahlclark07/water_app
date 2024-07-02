@@ -10,9 +10,9 @@ class MqttHandler with ChangeNotifier {
   final ValueNotifier<String> data = ValueNotifier<String>("");
   late MqttServerClient client;
 
-  Future<Object> connect() async {
+  Future<Object> connect({bool recharge = false}) async {
     client = MqttServerClient.withPort(
-        '10.0.2.2', 'lens_ALGxRhLLfeAVFZU2iMgNfBTyNUS232332323', 1883);
+        'broker.emqx.io', 'lens_ALGxRhLLfeAVFZU2iMgNfBTyNUS232332323', 1883);
     client.logging(on: true);
     client.onConnected = onConnected;
     client.onDisconnected = onDisconnected;
@@ -52,7 +52,7 @@ class MqttHandler with ChangeNotifier {
       return -1;
     }
     print('MQTT_LOGS::Subscribing to the test/lol topic');
-    final topic = 'client_${LaravelBackend().user["id"]}/update';
+    final topic = recharge ? 'client/code' : "client/update";
     client.subscribe(topic, MqttQos.atMostOnce);
 
     client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
@@ -94,9 +94,9 @@ class MqttHandler with ChangeNotifier {
   }
 
   void publishDemandeMessage() {
-    final pubTopic = 'client_${LaravelBackend().user["id"]}/demandeUpdate';
+    const pubTopic = 'client/compteur';
     final builder = MqttClientPayloadBuilder();
-    builder.addString(jsonEncode({"connected": "ok"}));
+    builder.addString("envoiInfo");
 
     if (client.connectionStatus?.state == MqttConnectionState.connected) {
       client.publishMessage(pubTopic, MqttQos.atMostOnce, builder.payload!);
@@ -104,9 +104,9 @@ class MqttHandler with ChangeNotifier {
   }
 
   void publishEtatCompteurMessage(bool etat) {
-    final pubTopic = 'client_${LaravelBackend().user["id"]}/compteur';
+    const pubTopic = 'client/compteur';
     final builder = MqttClientPayloadBuilder();
-    builder.addString(jsonEncode({"active": etat}));
+    builder.addString("compteur");
 
     if (client.connectionStatus?.state == MqttConnectionState.connected) {
       client.publishMessage(pubTopic, MqttQos.atMostOnce, builder.payload!);
@@ -114,7 +114,7 @@ class MqttHandler with ChangeNotifier {
   }
 
   void publishRecharge(String valeur) {
-    final pubTopic = 'client_${LaravelBackend().user["id"]}/compteur';
+    const pubTopic = 'client/compteur';
     final builder = MqttClientPayloadBuilder();
     builder.addString(valeur);
 

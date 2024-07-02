@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 class ToggleSwitch extends StatefulWidget {
   final MqttHandler mqttHandler;
-
-  const ToggleSwitch(this.mqttHandler, {super.key});
+  final bool isSwitched;
+  const ToggleSwitch(this.mqttHandler, {super.key, required this.isSwitched});
 
   @override
   State<ToggleSwitch> createState() => _ToggleSwitchState();
@@ -14,13 +14,18 @@ class ToggleSwitch extends StatefulWidget {
 class _ToggleSwitchState extends State<ToggleSwitch> {
   bool isSwitched = false;
 
-  _ToggleSwitchState();
-
   void _toggleSwitch(bool value) {
     widget.mqttHandler.publishEtatCompteurMessage(value);
     setState(() {
       isSwitched = value;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isSwitched = widget.isSwitched;
   }
 
   @override

@@ -20,7 +20,7 @@ class _RechargePageState extends State<RechargePage> {
   @override
   void initState() {
     super.initState();
-    mqttHandler.connect();
+    mqttHandler.connect(recharge: true);
   }
 
   @override
@@ -60,6 +60,7 @@ class _RechargePageState extends State<RechargePage> {
                         .copyWith(color: Palette.couleur_bleu.withAlpha(100)),
                     child: FormBuilderTextField(
                       name: "montant",
+                      controller: controller,
                       keyboardType: TextInputType.number,
                       validator: FormBuilderValidators.integer(
                           errorText: "Entrez un nombre"),
@@ -75,7 +76,7 @@ class _RechargePageState extends State<RechargePage> {
                   onPressed: () {
                     if (_formKey.currentState!.isValid) {
                       mqttHandler.publishRecharge(controller.text);
-                      Navigator.of(context).pop();
+                      // Navigator.of(context).pop();
                     }
                   },
                   child: Container(
@@ -87,6 +88,17 @@ class _RechargePageState extends State<RechargePage> {
                         style: TextDesign.text_blanc,
                         textAlign: TextAlign.center,
                       ))),
+              ValueListenableBuilder(
+                  valueListenable: mqttHandler.data,
+                  builder: (context, value, _) {
+                    return Container(
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                          textAlign: TextAlign.center,
+                          "Code : ${value.isEmpty ? "En attente" : value}"),
+                    );
+                  })
             ],
           ),
         ),
